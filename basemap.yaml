@@ -1,0 +1,175 @@
+background: '#00000000'
+layers:
+- query: nwr[building]
+  feature:
+    markerSymbol: false
+    style:
+      fill: true
+      color: '#c83737'
+      width: 0.5
+      fillColor: '#e9afaf'
+      fillOpacity: 1
+
+- query: |
+    (
+    way[highway];
+    )
+  feature:
+    markerSymbol: false
+    styles: |
+      {% if tags.bridge %}bridge_casing,bridge,{% endif %}
+      default
+    style:
+      fill: false
+      color: '#3f3f3f'
+      dashArray: |
+        {% if tags.steps %}0,3{% endif %}
+      lineCap: round
+
+      width: |
+        {% if tags.highway in ['footway', 'cycleway'] %}1
+        {% elseif tags.highway in ['service','track'] %}2
+        {% else %}3
+        {% endif %}
+      zIndex: |
+        {{ tags.layer|default(0) }}
+    style:bridge_casing:
+      fill: false
+      color: '#000000'
+      lineCap: butt
+      width: |
+        {% if tags.highway in ['footway', 'cycleway'] %}3
+        {% elseif tags.highway in ['service','track'] %}4
+        {% else %}5
+        {% endif %}
+      zIndex: |
+        {{ tags.layer|default(0) }}
+    style:bridge:
+      fill: false
+      color: '#ffffff'
+      lineCap: butt
+      width: |
+        {% if tags.highway in ['footway', 'cycleway'] %}2
+        {% elseif tags.highway in ['service','track'] %}3
+        {% else %}4
+        {% endif %}
+      zIndex: |
+        {{ tags.layer|default(0) }}
+
+- query: |
+    (
+    relation[railway=platform];
+    )
+  feature:
+    markerSymbol: false
+    style:
+      fill: true
+      color: '#3f3f3f'
+      fillColor: '#afafaf'
+      fillOpacity: 1
+      lineCap: round
+      width: 0.5
+
+- query: |
+    (
+    way[railway=platform];
+    )
+  feature:
+    markerSymbol: false
+    styles: casing,default
+    style:
+      fill: false
+      color: '#efefef'
+      lineCap: round
+      width: 3
+    style:casing:
+      color: '#3f3f3f'
+      width: 4
+      lineCap: round
+
+- query: way[railway][railway!='platform'][railway!='platform_edge']
+  feature:
+    markerSymbol: false
+    styles: |
+      {% if tags.bridge %}bridge_casing,bridge,{% endif %}
+      casing,default
+    style:
+      fill: false
+      color: '#ffffff'
+      dashArray: 6,6
+      dashOffset: 3
+      lineCap: butt
+      width: |
+        {% if tags.service %}2
+        {% else %}3
+        {% endif %}
+      zIndex: |
+        {% if tags.service %}{{ tags.layer|default(0) + 0.3 }}
+        {% else %}{{ tags.layer|default(0) + 0.1 }}
+        {% endif %}
+    style:casing:
+      fill: false
+      color: |
+        {% if tags.tunnel %}#7f7f7f
+        {% else %}#3f3f3f
+        {% endif %}
+      lineCap: round
+      width: |
+        {% if tags.service %}3
+        {% else %}4.5
+        {% endif %}
+      zIndex: |
+        {% if tags.service %}{{ tags.layer|default(0) + 0.2 }}
+        {% else %}{{ tags.layer|default(0) + 0.0 }}
+        {% endif %}
+    style:bridge_casing:
+      fill: false
+      color: '#000000'
+      lineCap: butt
+      width: |
+        {% if tags.service %}5
+        {% else %}6
+        {% endif %}
+      zIndex: |
+        {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
+        {% else %}{{ tags.layer|default(0) - 0.05 }}
+        {% endif %}
+    style:bridge:
+      fill: false
+      color: '#ffffff'
+      lineCap: butt
+      width: |
+        {% if tags.service %}4
+        {% else %}5
+        {% endif %}
+      zIndex: |
+        {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
+        {% else %}{{ tags.layer|default(0) - 0.05 }}
+        {% endif %}
+
+- query: way[natural=water]
+  feature:
+    styles: casing,default
+    style:
+      color: '#2e82ff'
+      width: 0.5
+      zIndex: -20
+      lineCap: round
+    style:casing:
+      fillColor: '#2ed4ff'
+      fillOpacity: 1
+      zIndex: -21
+  
+- query: way[waterway]
+  feature:
+    styles: casing,default
+    style:
+      lineCap: round
+      color: '#2ed4ff'
+      width: 4
+      zIndex: -20
+    style:casing:
+      lineCap: round
+      color: '#2e82ff'
+      width: 5
+      zIndex: -21
