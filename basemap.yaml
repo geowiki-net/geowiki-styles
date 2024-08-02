@@ -55,7 +55,7 @@ layers:
       width: |
         {{ width + 3 }}
       zIndex: |
-        {{ tags.layer|default(0) }}
+        {{ tags.layer|default(0) - 0.2 }}
     style:bridge:
       fill: false
       color: '#ffffff'
@@ -63,7 +63,7 @@ layers:
       width: |
         {{ width + 1 }}
       zIndex: |
-        {{ tags.layer|default(0) }}
+        {{ tags.layer|default(0) - 0.1 }}
 
 - query: |
     (
@@ -145,7 +145,7 @@ layers:
       color: '#000000'
       lineCap: butt
       width: |
-        {{ width + 4 }}
+        {{ width * 1.5 + 4 }}
       zIndex: |
         {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
         {% else %}{{ tags.layer|default(0) - 0.05 }}
@@ -155,10 +155,10 @@ layers:
       color: '#ffffff'
       lineCap: butt
       width: |
-        {{ width + 2 }}
+        {{ width * 1.5 + 2 }}
       zIndex: |
-        {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
-        {% else %}{{ tags.layer|default(0) - 0.05 }}
+        {% if tags.service %}{{ tags.layer|default(0) + 0.16 }}
+        {% else %}{{ tags.layer|default(0) - 0.04 }}
         {% endif %}
 
 - query: nwr[natural=water]
