@@ -61,7 +61,8 @@ layers:
     style:
       nodeFeature: CircleMarker
       width: 0
-      radius: 6
+      radius: |
+        {{ const.station.radius }}
       fill: true
       color: '#000000'
       fillColor: '#000000'
@@ -82,17 +83,18 @@ layers:
         {%- else %}middle
         {%- endif %}
       textColor: '#000000'
-      textFontSize: 16
+      textFontSize: |
+        {{ const.station.fontSize }}
       textHaloColor: '#ffffff'
       textHaloRadius: 1
       textMoveY: |-
-        {% if attribute(tags, '_labelPlacement') matches '/^n/' %}-10
-        {%- elseif attribute(tags, '_labelPlacement') matches '/^s/' %}10
+        {% if attribute(tags, '_labelPlacement') matches '/^n/' %}{{ const.station.offset * -1 }}
+        {%- elseif attribute(tags, '_labelPlacement') matches '/^s/' %}{{ const.station.offset }}
         {%- else %}middle
         {%- endif %}
       textMoveX: |-
-        {% if attribute(tags, '_labelPlacement') == 'w' %}-10
-        {%- elseif attribute(tags, '_labelPlacement') == 'e' %}10
+        {% if attribute(tags, '_labelPlacement') == 'w' %}{{ const.station.offset * -1 }}
+        {%- elseif attribute(tags, '_labelPlacement') == 'e' %}{{ const.station.offset }}
         {%- elseif attribute(tags, '_labelPlacement') matches '/e$/' %}0
         {%- elseif attribute(tags, '_labelPlacement') matches '/w$/' %}0
         {%- else %}middle
@@ -107,3 +109,7 @@ const:
   bridge:
     width: 1
     offset: 1.5
+  station:
+    radius: 6
+    fontSize: 16
+    offset: 10
