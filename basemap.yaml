@@ -25,6 +25,11 @@ layers:
     way[highway];
     )
   feature:
+    pre: |
+      {% set width = 3 %}
+      {% if tags.highway in ['footway', 'cycleway', 'steps'] %}{% set width = 1 %}
+      {% elseif tags.highway in ['service','track'] %}{% set width = 2 %}
+      {% endif %}
     markerSymbol: false
     styles: |
       {% if tags.bridge %}bridge_casing,bridge,{% endif %}
@@ -40,10 +45,7 @@ layers:
         {{ tags.highway == 'steps' ? 'butt' : 'round' }}
 
       width: |
-        {% if tags.highway in ['footway', 'cycleway', 'steps'] %}1
-        {% elseif tags.highway in ['service','track'] %}2
-        {% else %}3
-        {% endif %}
+        {{ width }}
       zIndex: |
         {{ tags.layer|default(0) }}
     style:bridge_casing:
@@ -51,10 +53,7 @@ layers:
       color: '#000000'
       lineCap: butt
       width: |
-        {% if tags.highway in ['footway', 'cycleway', 'steps'] %}4
-        {% elseif tags.highway in ['service','track'] %}5
-        {% else %}6
-        {% endif %}
+        {{ width + 3 }}
       zIndex: |
         {{ tags.layer|default(0) }}
     style:bridge:
@@ -62,10 +61,7 @@ layers:
       color: '#ffffff'
       lineCap: butt
       width: |
-        {% if tags.highway in ['footway', 'cycleway', 'steps'] %}3
-        {% elseif tags.highway in ['service','track'] %}4
-        {% else %}5
-        {% endif %}
+        {{ width + 1 }}
       zIndex: |
         {{ tags.layer|default(0) }}
 
@@ -102,6 +98,8 @@ layers:
 
 - query: way[railway][railway!='platform'][railway!='platform_edge']
   feature:
+    pre: |
+      {% set width = tags.service ? 2 : 3 %}
     markerSymbol: false
     styles: |
       back_casing,
@@ -114,9 +112,7 @@ layers:
       dashOffset: 3
       lineCap: butt
       width: |
-        {% if tags.service %}2
-        {% else %}3
-        {% endif %}
+        {{ width }}
       zIndex: |
         {% if tags.service %}{{ tags.layer|default(0) + 0.3 }}
         {% else %}{{ tags.layer|default(0) + 0.1 }}
@@ -129,9 +125,7 @@ layers:
         {% endif %}
       lineCap: round
       width: |
-        {% if tags.service %}3
-        {% else %}4.5
-        {% endif %}
+        {{ width }}
       zIndex: -10
     style:casing:
       fill: false
@@ -141,9 +135,7 @@ layers:
         {% endif %}
       lineCap: butt
       width: |
-        {% if tags.service %}3
-        {% else %}4.5
-        {% endif %}
+        {{ width * 1.5 }}
       zIndex: |
         {% if tags.service %}{{ tags.layer|default(0) + 0.2 }}
         {% else %}{{ tags.layer|default(0) + 0.0 }}
@@ -153,9 +145,7 @@ layers:
       color: '#000000'
       lineCap: butt
       width: |
-        {% if tags.service %}6
-        {% else %}7
-        {% endif %}
+        {{ width + 4 }}
       zIndex: |
         {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
         {% else %}{{ tags.layer|default(0) - 0.05 }}
@@ -165,9 +155,7 @@ layers:
       color: '#ffffff'
       lineCap: butt
       width: |
-        {% if tags.service %}5
-        {% else %}6
-        {% endif %}
+        {{ width + 2 }}
       zIndex: |
         {% if tags.service %}{{ tags.layer|default(0) + 0.15 }}
         {% else %}{{ tags.layer|default(0) - 0.05 }}
@@ -194,14 +182,18 @@ layers:
   
 - query: way[waterway]
   feature:
+    pre: |
+      {% set width = 3 %}
     styles: casing,default
     style:
       lineCap: round
       color: '#2ed4ff'
-      width: 4
+      width: |
+        {{ width }}
       zIndex: -20
     style:casing:
       lineCap: round
       color: '#2e82ff'
-      width: 5
+      width: |
+        {{ width + 1 }}
       zIndex: -21
