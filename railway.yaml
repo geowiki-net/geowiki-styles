@@ -1,0 +1,73 @@
+background: '#00000000'
+layers:
+- query: way[railway=rail][!service]
+  feature:
+    pre: |
+      {% set dir = 0 %}
+      {% if attribute(tags, 'railway:preferred_direction') == 'forward' %}
+      {% set dir = 1 %}
+      {% elseif attribute(tags, 'railway:preferred_direction') == 'backward' %}
+      {% set dir = -1 %}
+      {% endif %}
+    styles:
+      back,default{% if tags.bridge %},bridge{% if dir == 0 %},bridge_both{% endif %}{% endif %}
+    style:
+      fill: false
+      color: |
+        {% if tags.tunnel %}#7f7f7f
+        {% else %}#3f3f3f
+        {% endif %}
+      width: 3
+      offset: |
+        {{ dir * 2 }}
+      lineCap: butt
+    style:back:
+      fill: false
+      color: |
+        {% if tags.tunnel %}#7f7f7f
+        {% else %}#3f3f3f
+        {% endif %}
+      width: 3
+      offset: |
+        {{ dir * 2 }}
+      lineCap: round
+      zIndex: -11
+    style:bridge:
+      fill: false
+      lineCap: round
+      color: '#000000'
+      width: 1
+      offset: |
+        {{ dir * 5 }}
+      zIndex: -10.5
+    style:bridge_both:
+      fill: false
+      lineCap: round
+      color: '#000000'
+      width: 1
+      offset: |
+        {{ dir * -5 }}
+      zIndex: -10.5
+
+- query: nwr[railway=station][operator~"BB"]
+  feature:
+    styles: default,text
+    style:
+      nodeFeature: CircleMarker
+      width: 0
+      radius: 6
+      fill: true
+      color: '#000000'
+      fillColor: '#000000'
+      fillOpacity: 1
+    style:text:
+      nodeFeature: other
+      color: '#ff0000'
+      textPlacement: point
+      textColor: '#000000'
+      textFontSize: 16
+      textHaloColor: '#ffffff'
+      textHaloRadius: 1
+      textDY: 10
+      text: |
+        {{ tags.name }}
