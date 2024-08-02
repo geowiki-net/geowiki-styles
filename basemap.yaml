@@ -103,7 +103,7 @@ layers:
     markerSymbol: false
     styles: |
       back_casing,
-      {% if tags.bridge %}bridge_casing,bridge,{% endif %}
+      {% if tags.bridge %}bridge_backcasing,bridge_casing,bridge,{% endif %}
       casing,default
     style:
       fill: false
@@ -160,6 +160,14 @@ layers:
         {% if tags.service %}{{ tags.layer|default(0) + 0.16 }}
         {% else %}{{ tags.layer|default(0) - 0.04 }}
         {% endif %}
+    style:bridge_backcasing:
+      fill: false
+      color: '#ffffff'
+      lineCap: round
+      width: |
+        {{ width * 1.5 + 2 }}
+      zIndex: |
+        -9.9
 
 - query: nwr[natural=water]
   feature:
