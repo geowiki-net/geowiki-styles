@@ -69,12 +69,34 @@ layers:
     style:text:
       nodeFeature: other
       color: '#ff0000'
+      textFontName: DejaVu Sans Book
       textPlacement: point
+      textVerticalAlign: |-
+        {% if attribute(tags, '_labelPlacement') matches '/^n/' %}top
+        {%- elseif attribute(tags, '_labelPlacement') matches '/^s/' %}bottom
+        {%- else %}middle
+        {%- endif %}
+      textHorizontalAlign: |-
+        {% if attribute(tags, '_labelPlacement') matches '/e$/' %}right
+        {%- elseif attribute(tags, '_labelPlacement') matches '/w$/' %}left
+        {%- else %}middle
+        {%- endif %}
       textColor: '#000000'
       textFontSize: 16
       textHaloColor: '#ffffff'
       textHaloRadius: 1
-      textMoveY: 10
+      textMoveY: |-
+        {% if attribute(tags, '_labelPlacement') matches '/^n/' %}-10
+        {%- elseif attribute(tags, '_labelPlacement') matches '/^s/' %}10
+        {%- else %}middle
+        {%- endif %}
+      textMoveX: |-
+        {% if attribute(tags, '_labelPlacement') == 'w' %}-10
+        {%- elseif attribute(tags, '_labelPlacement') == 'e' %}10
+        {%- elseif attribute(tags, '_labelPlacement') matches '/e$/' %}0
+        {%- elseif attribute(tags, '_labelPlacement') matches '/w$/' %}0
+        {%- else %}middle
+        {%- endif %}
       text: |
         {{ tags.name }}
 
