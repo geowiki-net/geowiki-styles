@@ -1,11 +1,19 @@
 background: '#00000000'
 layers:
 - query:
-    10: way[railway=rail][!service]
+    10: |
+      (
+      way[railway=rail][!service][name=Vorortelinie];
+      way[railway=rail][s45];
+      )
   feature:
     pre: |
       {% set dir = 0 %}
-      {% if attribute(tags, 'railway:preferred_direction') == 'forward' %}
+      {% if tags.s45 == 'forward' %}
+      {% set dir = 1 %}
+      {% elseif tags.s45 == 'backward' %}
+      {% set dir = -1 %}
+      {% elseif attribute(tags, 'railway:preferred_direction') == 'forward' %}
       {% set dir = 1 %}
       {% elseif attribute(tags, 'railway:preferred_direction') == 'backward' %}
       {% set dir = -1 %}
@@ -55,7 +63,7 @@ layers:
       zIndex: -10.5
 
 - query:
-    10: nwr[railway=station][operator~"BB"]
+    10: nwr[railway~"^(station|halt)$"][s45=true]
   feature:
     styles: default,text
     style:
@@ -70,7 +78,7 @@ layers:
     style:text:
       nodeFeature: other
       color: '#ff0000'
-      textFontName: DejaVu Sans Book
+      textFontName: DejaVu Sans Bold
       textPlacement: point
       textVerticalAlign: |-
         {% if attribute(tags, '_labelPlacement') matches '/^n/' %}top
@@ -104,12 +112,12 @@ layers:
 
 const:
   railway:
-    width: 3
-    offset: 2
+    width: 5
+    offset: 3.5
   bridge:
-    width: 1
-    offset: 1.5
+    width: 3
+    offset: 2.5
   station:
-    radius: 6
-    fontSize: 16
-    offset: 10
+    radius: 8
+    fontSize: 24
+    offset: 14
